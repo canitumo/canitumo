@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CANITUMO Official Site</title>
+  <style>
+    :root {
+      --yellow: #ffd400;
+      --yellow-light: #fff3a1;
+      --orange: #ff8a00;
+      --orange-dark: #e46f00;
+      --navy: #0b1226;
+      --text: #0b1226;
+      --muted: #555;
+      --line: #eee;
+      --bg-soft: #fff7e6;
+      --white: #ffffff;
+      --pink: #ff5fb7;
+      --blue: #3aa7ff;
+      --mint: #39d98a;
+      --purple: #9b5cff;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans JP", "Yu Gothic", sans-serif;
+      font-weight: 700;
+      color: var(--text);
+      background: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -2;
+      background-image:
+        radial-gradient(rgba(255, 138, 0, .13) 2px, transparent 2px),
+        radial-gradient(rgba(58, 167, 255, .10) 2px, transparent 2px);
+      background-size: 34px 34px, 52px 52px;
+      animation: bgFloat 14s linear infinite;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      background:
+        radial-gradient(circle at 10% 18%, rgba(255, 212, 0, .20), transparent 18%),
+        radial-gradient(circle at 86% 16%, rgba(255, 95, 183, .12), transparent 17%),
+        radial-gradient(circle at 75% 82%, rgba(58, 167, 255, .12), transparent 20%);
+      animation: colorBreath 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes colorBreath {
+      from { opacity: .65; transform: scale(1); }
+      to { opacity: 1; transform: scale(1.04); }
+    }
+
+    @keyframes bgFloat {
+      from { background-position: 0 0; }
+      to { background-position: 34px 34px; }
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      min-height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      z-index: 100;
+      animation: headerDrop .5s ease both;
+    }
+
+    @keyframes headerDrop {
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .logo { display: inline-flex; align-items: center; }
+    .logo img { height: 48px; display: block; transition: .25s ease; }
+    .logo:hover img { transform: rotate(-3deg) scale(1.08); filter: drop-shadow(0 6px 0 var(--yellow)); }
+
+    .nav { display: flex; gap: 18px; align-items: center; }
+
+    .nav a {
+      min-width: 70px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      transition: .22s cubic-bezier(.18,.89,.32,1.28);
+    }
+
+    .nav-en { display:block; font-size: 17px; font-weight: 950; letter-spacing: .02em; }
+    .nav-ja { display:block; margin-top: 5px; font-size: 10px; font-weight: 900; }
+
+    .nav a::before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--yellow);
+      transform: translateX(-50%) scale(0) rotate(0deg);
+      z-index: -1;
+      transition: .25s cubic-bezier(.18,.89,.32,1.28);
+    }
+
+    .nav a:hover::before,
+    .nav a.active::before { transform: translateX(-50%) scale(1) rotate(12deg); }
+    .nav a:hover { transform: translateY(-4px) rotate(-2deg); }
+    .nav a:active { transform: translateY(1px) scale(.96); }
+
+    .page {
+      display: none;
+      padding-top: 100px;
+      min-height: 100vh;
+      animation: pagePop .45s ease both;
+    }
+
+    .page.active { display: block; }
+
+    @keyframes pagePop {
+      from { opacity: 0; transform: translateY(18px) scale(.985); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .hero {
+      min-height: 560px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      background: linear-gradient(135deg, #fff, var(--bg-soft));
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      z-index: 0;
+      animation: blobMove 7s ease-in-out infinite alternate;
+    }
+
+    .hero::before {
+      width: 390px;
+      height: 390px;
+      background: rgba(255, 212, 0, .38);
+      top: -130px;
+      right: -80px;
+    }
+
+    .hero::after {
+      width: 340px;
+      height: 340px;
+      background: rgba(255, 138, 0, .22);
+      bottom: -120px;
+      left: -90px;
+      animation-delay: .8s;
+    }
+
+    @keyframes blobMove {
+      from { transform: translate(0,0) scale(1); }
+      to { transform: translate(22px,18px) scale(1.06); }
+    }
+
+    .floating-word {
+      position: absolute;
+      font-size: clamp(52px, 10vw, 130px);
+      font-weight: 950;
+      color: rgba(255, 138, 0, .08);
+      pointer-events: none;
+      z-index: 0;
+      animation: floatY 5s ease-in-out infinite, huePulse 6s ease-in-out infinite alternate;
+      will-change: transform, color;
+    }
+
+    .floating-word.one { animation-name: floatLoopA, huePulse; animation-duration: 6s, 6s; animation-timing-function: ease-in-out, ease-in-out; animation-iteration-count: infinite, infinite; animation-direction: normal, alternate; }
+    .floating-word.two { animation-name: floatLoopB, huePulse; animation-duration: 7s, 6s; animation-timing-function: ease-in-out, ease-in-out; animation-iteration-count: infinite, infinite; animation-direction: normal, alternate; }
+    .floating-word.three { animation-name: floatLoopC, huePulse; animation-duration: 5.2s, 6s; animation-timing-function: ease-in-out, ease-in-out; animation-iteration-count: infinite, infinite; animation-direction: normal, alternate; }
+
+    @keyframes floatLoopA {
+      0%,100% { transform: rotate(-8deg) translate(0,0) scale(1); }
+      35% { transform: rotate(-4deg) translate(18px,-14px) scale(1.03); }
+      70% { transform: rotate(-11deg) translate(-10px,8px) scale(.98); }
+    }
+
+    @keyframes floatLoopB {
+      0%,100% { transform: rotate(8deg) translate(0,0) scale(1); }
+      30% { transform: rotate(13deg) translate(-18px,-10px) scale(.97); }
+      65% { transform: rotate(4deg) translate(12px,14px) scale(1.04); }
+    }
+
+    @keyframes floatLoopC {
+      0%,100% { transform: translateX(-50%) rotate(-2deg) translateY(0) scale(1); }
+      50% { transform: translateX(-50%) rotate(5deg) translateY(-22px) scale(1.06); }
+    }
+
+    .floating-word.one { left: 4vw; top: 120px; transform: rotate(-8deg); }
+    .floating-word.two { right: 4vw; bottom: 50px; transform: rotate(8deg); animation-delay: 1s; }
+
+    .floating-word.three {
+      left: 50%;
+      bottom: 8px;
+      transform: translateX(-50%) rotate(-2deg);
+      font-size: clamp(42px, 8vw, 100px);
+      color: rgba(58, 167, 255, .08);
+      animation-delay: 1.7s;
+    }
+
+    @keyframes floatY {
+      0%,100% { translate: 0 0; }
+      50% { translate: 0 -18px; }
+    }
+
+    @keyframes huePulse {
+      0% { color: rgba(255, 138, 0, .08); }
+      50% { color: rgba(255, 95, 183, .10); }
+      100% { color: rgba(58, 167, 255, .10); }
+    }
+
+    .sparkle {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--yellow);
+      border: 3px solid var(--navy);
+      z-index: 0;
+      animation: sparklePop 2.4s ease-in-out infinite;
+    }
+
+    .sparkle.s1 { left: 18%; top: 26%; background: var(--pink); animation-delay: .2s; }
+    .sparkle.s2 { right: 20%; top: 32%; background: var(--blue); animation-delay: .8s; }
+    .sparkle.s3 { left: 28%; bottom: 22%; background: var(--mint); animation-delay: 1.4s; }
+    .sparkle.s4 { right: 12%; bottom: 30%; width: 26px; height: 26px; background: var(--purple); animation-delay: 2s; }
+    .sparkle.s5 { left: 8%; bottom: 12%; width: 12px; height: 12px; background: var(--yellow); animation-delay: 2.5s; }
+
+    @keyframes sparklePop {
+      0%,100% { transform: scale(.65) rotate(0deg); opacity: .45; border-radius: 50%; }
+      35% { transform: scale(1.45) rotate(130deg); opacity: 1; border-radius: 28%; }
+      70% { transform: scale(.9) rotate(260deg); opacity: .72; border-radius: 50%; }
+    }
+
+    .sparkle.s2 { animation-name: sparkleStar; }
+    .sparkle.s4 { animation-name: sparkleStretch; }
+
+    @keyframes sparkleStar {
+      0%,100% { transform: scale(.65) rotate(0deg); opacity: .5; border-radius: 50%; }
+      50% { transform: scale(1.35) rotate(45deg); opacity: 1; border-radius: 4px; }
+    }
+
+    @keyframes sparkleStretch {
+      0%,100% { transform: scale(1,1) rotate(0deg); opacity: .45; }
+      45% { transform: scale(1.7,.55) rotate(15deg); opacity: 1; }
+      70% { transform: scale(.75,1.5) rotate(-20deg); }
+    }
+
+    .jack-box {
+      position: absolute;
+      right: clamp(18px, 8vw, 120px);
+      top: 46%;
+      width: 92px;
+      height: 86px;
+      z-index: 1;
+      animation: boxHop 3.2s ease-in-out infinite;
+    }
+
+    .jack-box::before {
+      content: "";
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      bottom: 0;
+      height: 54px;
+      border: 3px solid var(--navy);
+      background: var(--yellow);
+      border-radius: 12px;
+      box-shadow: 5px 5px 0 var(--navy);
+    }
+
+    .jack-box::after {
+      content: "!?";
+      position: absolute;
+      left: 50%;
+      top: 6px;
+      transform: translateX(-50%) scale(0);
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      border: 3px solid var(--navy);
+      border-radius: 50%;
+      background: var(--pink);
+      color: #fff;
+      font-weight: 950;
+      box-shadow: 4px 4px 0 var(--navy);
+      animation: surprisePop 3.2s cubic-bezier(.18,.89,.32,1.28) infinite;
+    }
+
+    @keyframes boxHop {
+      0%,100% { transform: translateY(0) rotate(0deg) scale(1); }
+      28% { transform: translateY(0) rotate(0deg) scale(1); }
+      36% { transform: translateY(-10px) rotate(-6deg) scale(1.04,.96); }
+      44% { transform: translateY(2px) rotate(5deg) scale(.96,1.06); }
+      52% { transform: translateY(-6px) rotate(-2deg) scale(1.02); }
+      60% { transform: translateY(0) rotate(0deg) scale(1); }
+    }
+
+    @keyframes surprisePop {
+      0%,38%,100% { transform: translateX(-50%) translateY(20px) scale(0); opacity: 0; }
+      46% { transform: translateX(-50%) translateY(-20px) scale(1.2) rotate(-10deg); opacity: 1; }
+      62% { transform: translateX(-50%) translateY(-14px) scale(1) rotate(8deg); opacity: 1; }
+      76% { transform: translateX(-50%) translateY(4px) scale(.7); opacity: 0; }
+    }
+
+    .hero-content { padding: 90px 20px; position: relative; z-index: 2; }
+
+    .label {
+      display: inline-block;
+      background: var(--orange);
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: 999px;
+      margin-bottom: 20px;
+      box-shadow: 0 5px 0 var(--navy);
+      border: 3px solid var(--navy);
+      animation: bounceIn .65s cubic-bezier(.18,.89,.32,1.28) both .15s;
+    }
+
+    @keyframes bounceIn {
+      from { opacity: 0; transform: translateY(-18px) scale(.8); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    h1 {
+      font-size: clamp(34px,6vw,72px);
+      white-space: nowrap;
+      margin: 0 0 20px;
+      font-weight: 950;
+      letter-spacing: -.04em;
+    }
+
+    .hero-title span {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(20px) rotate(2deg) scale(.95);
+      color: var(--orange);
+      -webkit-text-stroke: 2px var(--navy);
+      text-shadow: 3px 3px 0 var(--yellow), 6px 6px 0 #fff;
+      animation: pop .42s cubic-bezier(.18,.89,.32,1.28) forwards, letterDance 3.4s ease-in-out infinite;
+      animation-delay: calc(.08s * var(--i));
+    }
+
+    .hero-title span:nth-of-type(2),
+    .hero-title span:nth-of-type(5),
+    .hero-title span:nth-of-type(8),
+    .hero-title span:nth-of-type(11) {
+      animation-name: pop, letterDance, funnyBreak;
+      animation-duration: .42s, 3.4s, 5.8s;
+      animation-timing-function: cubic-bezier(.18,.89,.32,1.28), ease-in-out, steps(1);
+      animation-iteration-count: 1, infinite, infinite;
+      animation-fill-mode: forwards, none, none;
+    }
+
+    .hero-title span:hover {
+      transform: translateY(-8px) rotate(-5deg) scale(1.08);
+      color: var(--yellow);
+      text-shadow: 3px 3px 0 var(--orange), 6px 6px 0 #fff;
+      animation: none;
+    }
+
+    @keyframes funnyBreak {
+      0%,74%,100% { rotate: 0deg; scale: 1; translate: 0 0; filter: none; }
+      76% { rotate: -12deg; scale: 1.10 .88; translate: 0 5px; filter: hue-rotate(40deg); }
+      78% { rotate: 10deg; scale: .92 1.09; translate: 0 -4px; }
+      80% { rotate: -5deg; scale: 1.04 .98; translate: 2px 0; }
+      82% { rotate: 0deg; scale: 1; translate: 0 0; filter: none; }
+    }
+
+    .hero-title span:nth-of-type(3n) { animation-name: pop, letterBounce, funnyBreak; }
+
+    @keyframes letterBounce {
+      0%,100% { translate: 0 0; }
+      20% { translate: 0 -7px; }
+      40% { translate: 0 1px; }
+      70% { translate: 0 -3px; }
+    }
+
+    @keyframes pop { to { opacity: 1; transform: translateY(0) rotate(0) scale(1); } }
+
+    @keyframes letterDance {
+      0%,100% { translate: 0 0; }
+      50% { translate: 0 -5px; }
+    }
+
+    .hero-copy {
+      background: var(--navy);
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: 999px;
+      display: inline-block;
+      margin: 0 0 18px;
+      animation: fadeUp .5s ease both 1.15s, copyFloat 3s ease-in-out infinite 1.7s;
+    }
+
+    @keyframes copyFloat {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .btn-row { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; animation: fadeUp .5s ease both 1.3s; }
+
+    .btn {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      margin-top: 12px;
+      padding: 12px 24px;
+      border-radius: 999px;
+      border: 3px solid var(--navy);
+      background: var(--yellow);
+      font-weight: 950;
+      box-shadow: 0 5px 0 var(--navy);
+      cursor: pointer;
+      transition: .22s cubic-bezier(.18,.89,.32,1.28);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(110deg, transparent 0%, rgba(255,255,255,.65) 45%, transparent 70%);
+      transform: translateX(-120%);
+      transition: .35s ease;
+    }
+
+    .btn:hover::after { transform: translateX(120%); }
+    .btn:hover { transform: translateY(-5px) rotate(-1deg); box-shadow: 0 10px 0 var(--navy); }
+    .btn:active { transform: translateY(2px); box-shadow: 0 3px 0 var(--navy); }
+    .btn.orange { background: var(--orange); color:#fff; }
+
+    .btn.mystery {
+      background: var(--pink);
+      color: #fff;
+      animation: mysteryBlink 2.8s ease-in-out infinite;
+    }
+
+    @keyframes mysteryBlink {
+      0%,100% { filter: hue-rotate(0deg); }
+      50% { filter: hue-rotate(45deg); transform: translateY(-2px) rotate(1deg); }
+    }
+
+    .section-wrap { width: min(1120px, 90%); margin: auto; padding: 58px 0; }
+
+    .page-head { text-align:center; margin-bottom: 32px; animation: fadeUp .45s ease both; }
+    .page-head h2 { font-size: clamp(40px, 6vw, 64px); margin: 0; font-weight:950; color:var(--navy); text-shadow: 4px 4px 0 var(--yellow); animation: titleWobble 3.2s ease-in-out infinite; }
+
+    @keyframes titleWobble {
+      0%,100% { transform: rotate(0deg); }
+      25% { transform: rotate(-1deg); }
+      75% { transform: rotate(1deg); }
+    }
+    .page-head p { margin: 10px 0 0; color: var(--muted); font-weight:900; }
+
+    .section-title-row {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin: 44px 0 18px;
+    }
+
+    .section-title-row h2 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 44px);
+      text-shadow: 3px 3px 0 var(--yellow);
+    }
+
+    .section-title-row p { margin: 0; color: var(--muted); }
+
+    .home-blocks {
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:22px;
+      margin-top: 34px;
+      text-align:left;
+    }
+
+    .home-fun-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .mini-card {
+      padding: 20px;
+      border: 3px solid var(--navy);
+      border-radius: 22px;
+      background: #fff;
+      box-shadow: 6px 6px 0 var(--orange);
+      transition: .22s cubic-bezier(.18,.89,.32,1.28);
+      animation: softBounce 4s ease-in-out infinite;
+    }
+
+    .mini-card:nth-child(2) { box-shadow: 6px 6px 0 var(--blue); animation-delay: .5s; }
+    .mini-card:nth-child(3) { box-shadow: 6px 6px 0 var(--pink); animation-delay: 1s; }
+
+    @keyframes softBounce {
+      0%,100% { transform: translateY(0) rotate(0deg); }
+      30% { transform: translateY(-6px) rotate(-1deg); }
+      60% { transform: translateY(2px) rotate(1deg); }
+    }
+
+    .mini-card:nth-child(2) { animation-name: softSwing; }
+    .mini-card:nth-child(3) { animation-name: softPop; }
+
+    @keyframes softSwing {
+      0%,100% { transform: rotate(0deg) translateY(0); }
+      35% { transform: rotate(2deg) translateY(-4px); }
+      70% { transform: rotate(-1deg) translateY(2px); }
+    }
+
+    @keyframes softPop {
+      0%,100% { transform: scale(1); }
+      45% { transform: scale(1.025) translateY(-4px); }
+      75% { transform: scale(.99); }
+    }
+
+    .mini-card:hover { transform: translateY(-7px) rotate(1.5deg); box-shadow: 10px 10px 0 var(--yellow); }
+    .mini-card strong { font-size: 24px; display: block; margin-bottom: 8px; }
+
+    .mini-card.surprise { cursor: pointer; }
+
+    .mini-card.surprise .hidden-pop {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transform: scale(.85) rotate(-2deg);
+      transition: .35s cubic-bezier(.18,.89,.32,1.28);
+      margin-top: 0;
+      color: var(--orange-dark);
+      font-weight: 950;
+    }
+
+    .mini-card.surprise:hover .hidden-pop {
+      max-height: 80px;
+      opacity: 1;
+      margin-top: 12px;
+      transform: scale(1) rotate(0deg);
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 20px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      border: 3px solid var(--navy);
+      padding: 22px;
+      border-radius: 22px;
+      background: #fff;
+      box-shadow: 7px 7px 0 var(--yellow);
+      transition: .24s cubic-bezier(.18,.89,.32,1.28);
+      position: relative;
+      overflow: hidden;
+      animation: cardIn .42s ease both;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      right: -42px;
+      bottom: -42px;
+      width: 110px;
+      height: 110px;
+      background: rgba(255,138,0,.12);
+      border-radius: 50%;
+      transition: .24s ease;
+      animation: cardBubble 5s ease-in-out infinite;
+    }
+
+    .card:nth-child(2n)::before { background: rgba(58,167,255,.12); }
+    .card:nth-child(3n)::before { background: rgba(255,95,183,.12); }
+
+    @keyframes cardBubble {
+      0%,100% { transform: scale(1); }
+      50% { transform: scale(1.25); }
+    }
+
+    .card:hover::before { transform: scale(1.55); background: rgba(255,212,0,.28); }
+    .card:hover { transform: translateY(-8px) rotate(-1deg); box-shadow: 12px 12px 0 var(--orange); }
+    .card:active { transform: translateY(-2px) scale(.99); }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card.orange-shadow { box-shadow: 7px 7px 0 var(--orange); }
+    .card.orange-shadow:hover { box-shadow: 12px 12px 0 var(--yellow); }
+
+    .card.prank:hover { animation: prankShake .42s ease both; }
+
+    @keyframes prankShake {
+      0%,100% { transform: translateY(-8px) rotate(-1deg); }
+      20% { transform: translateY(-8px) rotate(2deg) skewX(2deg); }
+      40% { transform: translateY(-8px) rotate(-3deg) skewX(-2deg); }
+      60% { transform: translateY(-8px) rotate(2deg); }
+      80% { transform: translateY(-8px) rotate(-1deg); }
+    }
+
+    .date {
+      display:inline-block;
+      background:var(--orange);
+      color:#fff;
+      padding:5px 12px;
+      border-radius:999px;
+      font-size:13px;
+      margin-bottom:10px;
+      border:2px solid var(--navy);
+      transition: .2s ease;
+    }
+
+    .card:hover .date { transform: rotate(-3deg) scale(1.06); background: var(--navy); }
+
+    .thumb {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      margin-bottom: 14px;
+      border-radius: 16px;
+      border: 3px dashed rgba(255,138,0,.55);
+      overflow: hidden;
+      display: block;
+      background: #000;
+      position: relative;
+    }
+
+    .thumb img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .thumb iframe{
+      width:100%;
+      height:100%;
+      border:0;
+      display:block;
+    }
+
+    .thumb img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .thumb::after {
+      content: none;
+    }
+
+    @keyframes playPulse {
+      0%,100% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+    }
+      50% { transform: scale(1.12); }
+    }
+
+    .card:hover .thumb { transform: scale(1.02); border-style: solid; background: linear-gradient(135deg, #ffd400, #fff7e6); }
+
+    .slider {
+      display: flex;
+      gap: 20px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding: 8px 8px 22px;
+      margin-bottom: 44px;
+      cursor: grab;
+    }
+
+    .slider:active { cursor: grabbing; }
+    .slider::-webkit-scrollbar { height: 10px; }
+    .slider::-webkit-scrollbar-track { background: #fff0cc; border-radius:999px; }
+    .slider::-webkit-scrollbar-thumb { background: var(--orange); border-radius:999px; }
+
+    .slide-card {
+      flex: 0 0 100%;
+      scroll-snap-align: center;
+    }
+
+    .video-switcher {
+      display: grid;
+      grid-template-columns: 48px 1fr 48px;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 44px;
+    }
+
+    .video-switcher .slider {
+      margin-bottom: 0;
+      padding-bottom: 12px;
+    }
+
+    .slide-btn {
+      height: 48px;
+      width: 48px;
+      border-radius: 50%;
+      border: 3px solid var(--navy);
+      background: var(--yellow);
+      box-shadow: 0 5px 0 var(--navy);
+      font-size: 22px;
+      font-weight: 950;
+      cursor: pointer;
+      transition: .2s cubic-bezier(.18,.89,.32,1.28);
+    }
+
+    .slide-btn:hover { transform: translateY(-4px) rotate(-5deg); box-shadow: 0 9px 0 var(--navy); }
+
+    .jp-label {
+      display: inline-block;
+      margin-left: 10px;
+      padding: 4px 10px;
+      font-size: 14px;
+      vertical-align: middle;
+      border: 2px solid var(--navy);
+      border-radius: 999px;
+      background: var(--yellow);
+      box-shadow: 3px 3px 0 var(--navy);
+    }
+
+    .intro-box {
+      position: relative;
+      background: var(--yellow);
+      border: 3px solid var(--navy);
+      border-radius: 24px;
+      padding: 28px 22px 24px;
+      margin: 18px 0 20px;
+      text-align: center;
+      overflow: hidden;
+      box-shadow: 7px 7px 0 var(--navy);
+    }
+
+    .intro-box::before {
+      content: "かにつも";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) rotate(-5deg);
+      font-size: clamp(54px, 9vw, 120px);
+      font-weight: 950;
+      color: rgba(255,255,255,.35);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .intro-main {
+      position: relative;
+      z-index: 1;
+      margin: 0 0 10px;
+      font-size: clamp(28px, 5vw, 56px);
+      line-height: .95;
+      font-weight: 950;
+      color: #fff;
+      -webkit-text-stroke: 3px var(--navy);
+      text-shadow: 4px 4px 0 var(--navy), 7px 7px 0 rgba(255,138,0,.65);
+      letter-spacing: -.04em;
+    }
+
+    .intro-sub {
+      position: relative;
+      z-index: 1;
+      display: inline-block;
+      margin: 0;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: #fff;
+      border: 2px solid var(--navy);
+      color: var(--navy);
+      font-weight: 950;
+      box-shadow: 4px 4px 0 var(--orange);
+    }
+
+    .slider-hint {
+      display: inline-block;
+      background: var(--navy);
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      margin-bottom: 12px;
+      animation: wiggle 1.8s ease-in-out infinite;
+    }
+
+    .confetti-line {
+      height: 16px;
+      margin: 8px 0 18px;
+      background:
+        linear-gradient(90deg, var(--orange) 0 12%, transparent 12% 18%, var(--yellow) 18% 32%, transparent 32% 40%, var(--blue) 40% 54%, transparent 54% 62%, var(--pink) 62% 76%, transparent 76% 84%, var(--mint) 84% 100%);
+      border-radius: 999px;
+      border: 3px solid var(--navy);
+      animation: confettiSlide 3s linear infinite;
+    }
+
+    @keyframes confettiSlide {
+      from { background-position: 0 0; }
+      to { background-position: 180px 0; }
+    }
+
+    @keyframes wiggle {
+      0%,100% { transform: translateX(0); }
+      50% { transform: translateX(8px); }
+    }
+
+    .profile-image {
+      min-height: 300px;
+      border: 3px dashed rgba(255,138,0,.6);
+      border-radius: 22px;
+      display:grid;
+      place-items:center;
+      color:var(--muted);
+      background:#fff7e6;
+      transition: .25s ease;
+    }
+
+    .profile-image:hover { transform: rotate(1deg) scale(1.02); background: #fff0cc; }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .tag {
+      background: var(--yellow);
+      border: 2px solid var(--navy);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 950;
+      transition: .2s;
+    }
+
+    .tag:hover { background: var(--orange); color: #fff; transform: translateY(-3px) rotate(-3deg); }
+
+    .tag:nth-child(2n) { animation: tagPop 3.3s ease-in-out infinite; }
+    .tag:nth-child(3n) { animation: tagPop 3.3s ease-in-out infinite .8s; }
+
+    @keyframes tagPop {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-4px) rotate(2deg); }
+    }
+
+    .timeline {
+      display: grid;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .timeline-date {
+      background: var(--yellow);
+      border: 3px solid var(--navy);
+      border-radius: 999px;
+      padding: 8px 10px;
+      text-align: center;
+      font-weight: 950;
+      animation: timelinePop 2.6s ease-in-out infinite;
+    }
+
+    .timeline-item:nth-child(2) .timeline-date { background: var(--blue); color: #fff; animation-delay: .7s; }
+
+    @keyframes timelinePop {
+      0%,100% { transform: scale(1); }
+      50% { transform: scale(1.08) rotate(-2deg); }
+    }
+
+    .sns-card, .contact-card { text-align:center; font-size:22px; font-weight:950; }
+
+    .sns-card.youtube:hover { background: #fff0f0; }
+    .sns-card.x:hover { background: #eef6ff; }
+    .sns-card.tiktok:hover { background: #fff0fb; }
+
+    .contact-card p { font-size: 18px; line-height: 1.8; }
+
+    .footer { text-align: center; padding: 34px; font-weight:900; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 28px;
+      transform: translateX(-50%) translateY(120px) rotate(-2deg);
+      background: var(--navy);
+      color: #fff;
+      border: 3px solid var(--navy);
+      box-shadow: 0 6px 0 var(--yellow);
+      padding: 12px 20px;
+      border-radius: 999px;
+      z-index: 999;
+      font-weight: 950;
+      transition: .28s cubic-bezier(.18,.89,.32,1.28);
+    }
+
+    .bgm-toggle {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 998;
+      border: 3px solid var(--navy);
+      background: var(--yellow);
+      color: var(--navy);
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-weight: 950;
+      box-shadow: 0 5px 0 var(--navy);
+      cursor: pointer;
+      transition: .22s cubic-bezier(.18,.89,.32,1.28);
+      animation: bgmButton 2.8s ease-in-out infinite;
+    }
+
+    .bgm-toggle:hover { transform: translateY(-4px) rotate(-2deg); box-shadow: 0 9px 0 var(--navy); }
+    .bgm-toggle.playing { background: var(--orange); color: #fff; }
+
+    @keyframes bgmButton {
+      0%,100% { scale: 1; }
+      50% { scale: 1.04; }
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    @media(max-width:900px){
+      .site-header { align-items:flex-start; padding:12px 14px; height:auto; }
+      .logo img { height:38px; }
+      .nav { gap:8px; flex-wrap:wrap; justify-content:flex-end; }
+      .nav a { min-width:58px; }
+      .nav-en { font-size:12px; }
+      .nav-ja { font-size:9px; }
+      .page { padding-top: 120px; }
+      h1 { font-size: clamp(28px, 7.3vw, 44px); }
+      .hero-title span { -webkit-text-stroke: 1px var(--navy); text-shadow: 2px 2px 0 var(--yellow), 4px 4px 0 #fff; }
+      .home-blocks,.home-fun-grid,.grid-3,.grid-2{grid-template-columns:1fr;}
+      .section-title-row { display: block; }
+      .timeline-item { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="#home" data-page="home" class="logo"><img src="logo.png" alt="かにつも"></a>
+  <nav class="nav">
+    <a href="#home" data-page="home" class="active"><span class="nav-en">TOP</span><span class="nav-ja">トップ</span></a>
+    <a href="#news" data-page="news"><span class="nav-en">NEWS</span><span class="nav-ja">ニュース</span></a>
+    <a href="#about" data-page="about"><span class="nav-en">ABOUT</span><span class="nav-ja">かにつも</span></a>
+    <a href="#video" data-page="video"><span class="nav-en">VIDEO</span><span class="nav-ja">動画</span></a>
+    <a href="#sns" data-page="sns"><span class="nav-en">SNS</span><span class="nav-ja">リンク</span></a>
+    <a href="#contact" data-page="contact"><span class="nav-en">CONTACT</span><span class="nav-ja">お問い合わせ</span></a>
+  </nav>
+</header>
+
+<main>
+
+<section id="home" class="page active">
+  <div class="hero">
+    <div class="floating-word one">PLAY</div>
+    <div class="floating-word two">GAME</div>
+    <div class="floating-word three">WOW!</div>
+    <div class="sparkle s1"></div>
+    <div class="sparkle s2"></div>
+    <div class="sparkle s3"></div>
+    <div class="sparkle s4"></div>
+    <div class="sparkle s5"></div>
+    <div class="jack-box"></div>
+    <div class="hero-content">
+      <div class="label">かにつものサイトへようこそ！</div>
+      <h1 class="hero-title">
+        <span style="--i:1">ゲ</span><span style="--i:2">ー</span><span style="--i:3">ム</span><span style="--i:4">の</span><span style="--i:5">中</span><span style="--i:6">へ</span><span style="--i:7">遊</span><span style="--i:8">び</span><span style="--i:9">に</span><span style="--i:10">い</span><span style="--i:11">こ</span><span style="--i:12">う</span>
+      </h1>
+      <p class="hero-copy">ビビって、笑って、ツッコんで。動画の外側まで楽しめる場所。</p>
+      <div class="btn-row">
+        <a href="#video" data-page="video" class="btn">動画を見る</a>
+        <a href="#about" data-page="about" class="btn orange">かにつもって？</a>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="section-wrap">
+    <div class="home-blocks">
+      <article class="card prank">
+        <div class="date">NEWS</div>
+        <h2>最新のお知らせ <span class="jp-label">ニュース</span></h2>
+        <p>新作動画・配信予定・企画のお知らせをここに表示します。更新があるたびに、ここからすぐ確認できます。</p>
+        <a href="#news" data-page="news" class="btn">ニュースを見る</a>
+      </article>
+      <article class="card orange-shadow">
+        <div class="date">ABOUT</div>
+        <h2>かにつもとは？</h2>
+        <div class="intro-box">
+          <p class="intro-main">どうも！<br>かにつもです！</p>
+          <p class="intro-sub">いろんなゲームをやりまくってます！</p>
+        </div>
+        <p>ホラーでは本気でビビり、ネタ系では全力で遊ぶゲーム実況者。リアクションとツッコミ多めで楽しく実況しています。</p>
+        <a href="#about" data-page="about" class="btn orange">もっと見る</a>
+      </article>
+    </div>
+
+    <div class="section-title-row">
+      <h2>CANITUMO POINT</h2>
+      <p>初めて来た人向けの見どころ</p>
+    </div>
+    <div class="home-fun-grid">
+      <div class="mini-card surprise"><strong>リアクション</strong><p>怖い場面も驚く場面も、反応はかなり素直。</p><div class="hidden-pop">＼ うわっ！？ってなる瞬間あり ／</div></div>
+      <div class="mini-card surprise"><strong>テンポ</strong><p>ショートでも本編でも、見やすい流れを意識。</p><div class="hidden-pop">＼ サクッと見られる！ ／</div></div>
+      <div class="mini-card surprise"><strong>世界観</strong><p>動画・サイト・SNSまで、かにつもらしい空気感を作成中。</p><div class="hidden-pop">＼ まだまだ進化中！ ／</div></div>
+    </div>
+    <div class="confetti-line"></div>
+
+    <div class="section-title-row">
+      <h2>PLAY STYLE</h2>
+      <p>実況の楽しみ方</p>
+    </div>
+    <div class="home-fun-grid">
+      <div class="mini-card surprise"><strong>びっくり</strong><p>ホラーや急展開で出るリアルな反応。</p><div class="hidden-pop">＼ 音量注意かも？ ／</div></div>
+      <div class="mini-card surprise"><strong>わちゃわちゃ</strong><p>ゲーム中のツッコミや独り言も楽しめる。</p><div class="hidden-pop">＼ だいたい何か言ってる ／</div></div>
+      <div class="mini-card surprise"><strong>一緒に遊ぶ感</strong><p>見ている人も同じ場面にいるような空気感。</p><div class="hidden-pop">＼ コメントも待ってる！ ／</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="news" class="page">
+  <div class="section-wrap">
+    <div class="page-head"><h2>NEWS</h2><p>お知らせ</p></div>
+
+    <div class="grid-3">
+      <div class="card prank">
+        <div class="date">2026.04.28</div>
+        <h3>公式サイト進化中！</h3>
+        <p>現在サイトをどんどん進化させています。アニメーションや隠し要素も追加中！見つけたらラッキー。</p>
+      </div>
+
+      <div class="card prank">
+        <div class="date">NEW</div>
+        <h3>最新動画公開！</h3>
+        <p>新しい実況動画を投稿しました！ホラーでガチビビりしてますｗぜひ見てください。</p>
+        <a href="#video" data-page="video" class="btn">動画を見る</a>
+      </div>
+
+      <div class="card prank">
+        <div class="date">EVENT</div>
+        <h3>新企画準備中</h3>
+        <p>新しい実況企画を考え中…！今までにないことやる予定なのでお楽しみに。</p>
+      </div>
+    </div>
+
+    <div class="section-title-row">
+      <h2>UPDATE LOG</h2>
+      <p>サイトの進化履歴</p>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-date">NOW</div>
+        <div class="card">
+          <h3>アニメーション強化</h3>
+          <p>サイト全体に動きを追加。触って楽しいサイトに進化。</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-date">STEP</div>
+        <div class="card">
+          <h3>隠し要素追加</h3>
+          <p>隠しページやびっくり演出を実装。まだ増やす予定。</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-date">NEXT</div>
+        <div class="card">
+          <h3>動画連動</h3>
+          <p>動画と連動した演出を追加予定。サイト内でさらに遊べるように。</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="about" class="page">
+  <div class="section-wrap">
+    <div class="page-head"><h2>ABOUT</h2><p>かにつもについて</p></div>
+    <div class="grid-2">
+      <div class="profile-image">プロフィール用イラスト</div>
+      <div class="card orange-shadow">
+        <div class="intro-box">
+          <p class="intro-main">どうも！<br>かにつもです！</p>
+          <p class="intro-sub">いろんなゲームをやりまくってます！</p>
+        </div>
+        <h3>かにつも
+        <p>ゲームの世界に入り込みながら、リアクションとトークで楽しさを届けるゲーム実況者。</p>
+        <p>ホラーでは本気でビビり、ストーリーでは感情ごと味わい、ネタ系では全力で遊びます。</p>
+        <div class="tag-list">
+          <span class="tag">ホラーゲーム</span>
+          <span class="tag">リアクション</span>
+          <span class="tag">ツッコミ</span>
+          <span class="tag">ショート動画</span>
+          <span class="tag">ゲーム実況</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="video" class="page">
+  <div class="section-wrap">
+    <div class="page-head"><h2>VIDEO</h2><p>動画紹介</p></div>
+
+    <div class="section-title-row"><h2>おすすめ動画</h2><p>初めて来た人にまず見てほしい動画</p></div>
+    <div class="video-switcher">
+      <button class="slide-btn" data-slider="recommend" data-dir="prev">‹</button>
+      <div class="slider" id="recommend-slider">
+        <article class="card slide-card">
+          <div class="thumb"><iframe src="https://www.youtube.com/embed/bia0O_qbwDs" title="おすすめ動画1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+          <h3>おすすめ動画 1</h3>
+          <p>まず見てほしい代表動画。</p>
+          <a href="https://youtu.be/bia0O_qbwDs?si=kDnVhi1kEYA_OcGt" target="_blank" class="btn">見る</a>
+        </article>
+        <article class="card slide-card">
+          <div class="thumb"><iframe src="https://www.youtube.com/embed/7NBDxwhn6xs" title="おすすめ動画2" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+          <h3>おすすめ動画 2</h3>
+          <p>リアクション系動画。</p>
+          <a href="https://youtu.be/7NBDxwhn6xs?si=Z_cVz1Lnpqv1XjC4" target="_blank" class="btn">見る</a>
+        </article>
+        <article class="card slide-card">
+          <div class="thumb"><iframe src="https://www.youtube.com/embed/WldE6B8jsSU" title="おすすめ動画3" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+          <h3>おすすめ動画 3</h3>
+          <p>初見向け動画。</p>
+          <a href="https://youtu.be/WldE6B8jsSU?si=4vyCjaoAQA-16CBm" target="_blank" class="btn">見る</a>
+        </article>
+        <article class="card slide-card">
+          <div class="thumb"><iframe src="https://www.youtube.com/embed/SxubQY-Jv9E" title="おすすめ動画4" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+          <h3>おすすめ動画 4</h3>
+          <p>テンポ重視動画。</p>
+          <a href="https://youtu.be/SxubQY-Jv9E?si=Yd2J-F4OtkMsLq6r" target="_blank" class="btn">見る</a>
+        </article>
+        <article class="card slide-card">
+          <div class="thumb"><iframe src="https://www.youtube.com/embed/95OPLkUyrSo" title="おすすめ動画5" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+          <h3>おすすめ動画 5</h3>
+          <p>代表的な一本。</p>
+          <a href="https://youtu.be/95OPLkUyrSo?si=iztVVZFkQbLZkQXd" target="_blank" class="btn">見る</a>
+        </article>
+      </div>
+      <button class="slide-btn" data-slider="recommend" data-dir="next">›</button>
+    </div>
+
+    <div class="section-title-row"><h2>おすすめシリーズ</h2><p>まとめて楽しめるシリーズ実況</p></div>
+    <div class="video-switcher">
+      <button class="slide-btn" data-slider="series" data-dir="prev">‹</button>
+      <div class="slider" id="series-slider">
+        <article class="card slide-card">
+          <a href="https://www.youtube.com/playlist?list=PLAYLIST_ID_1" target="_blank">
+            <div class="thumb"><img src="images/series1.jpg" alt="シリーズ1"></div>
+          </a>
+          <h3>シリーズ 1</h3>
+          <p>シリーズ実況の入口。</p>
+          <a href="https://www.youtube.com/playlist?list=PLAYLIST_ID_1" target="_blank" class="btn">見る</a>
+        </article>
+        <article class="card slide-card">
+          <a href="https://www.youtube.com/playlist?list=PLAYLIST_ID_2" target="_blank">
+            <div class="thumb"><img src="images/series2.jpg" alt="シリーズ2"></div>
+          </a>
+          <h3>シリーズ 2</h3>
+          <p>続けて見たい動画シリーズ。</p>
+          <a href="https://www.youtube.com/playlist?list=PLAYLIST_ID_2" target="_blank" class="btn">見る</a>
+        </article>
+        <article class="card slide-card">
+          <a href="https://www.youtube.com/playlist?list=PLAYLIST_ID_3" target="_blank">
+            <div class="thumb"><img src="images/series3.jpg" alt="シリーズ3"></div>
+          </a>
+          <h3>シリーズ 3</h3>
+          <p>まとめて楽しめるシリーズ。</p>
+          <a href="https://www.youtube.com/playlist?list=PLAYLIST_ID_3" target="_blank" class="btn">見る</a>
+        </article>
+      </div>
+      <button class="slide-btn" data-slider="series" data-dir="next">›</button>
+    </div>
+  </div>
+</section>
+
+<section id="sns" class="page">
+  <div class="section-wrap">
+    <div class="page-head"><h2>SNS</h2><p>リンク</p></div>
+    <div class="grid-3">
+      <a class="card sns-card youtube" href="#">YouTube<br><small>本編・ショート</small></a>
+      <a class="card sns-card x" href="#">Twitter / X<br><small>告知・日常</small></a>
+      <a class="card sns-card tiktok" href="#">TikTok<br><small>切り抜き</small></a>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="page">
+  <div class="section-wrap">
+    <div class="page-head"><h2>CONTACT</h2><p>お問い合わせ</p></div>
+    <div class="card contact-card">
+      <p>コラボ・案件・お問い合わせはこちら。ゲーム実況、動画企画、SNS関連のご連絡を受け付けています。</p>
+      <a class="btn orange" href="mailto:example@example.com">メールする</a>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- 隠しページ -->
+<section id="secret" class="page">
+  <div class="section-wrap">
+    <div class="page-head"><h2>SECRET</h2><p>見つけた人だけ</p></div>
+    <div class="card">
+      <h3>ここに来たってことは…</h3>
+      <p>かなりやりこんでるねｗ ここは隠しページ。</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">© CANITUMO</footer>
+<div class="toast" id="toast">ページを開きました！</div>
+<button class="bgm-toggle" id="bgmToggle" type="button">♪ BGM OFF</button>
+
+<script>
+const links = document.querySelectorAll('[data-page]');
+const pages = document.querySelectorAll('.page');
+const navLinks = document.querySelectorAll('.nav a');
+const toast = document.getElementById('toast');
+
+function showToast(text){
+  if(!toast) return;
+  toast.textContent = text;
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),1300);
+}
+
+function showPage(id){
+  const targetPage = document.getElementById(id);
+  if(!targetPage) return;
+
+  pages.forEach(page=>page.classList.remove('active'));
+  targetPage.classList.add('active');
+
+  navLinks.forEach(link=>{
+    link.classList.toggle('active', link.dataset.page === id);
+  });
+
+  window.scrollTo(0,0);
+
+  const label = {
+    home:'トップ',
+    news:'ニュース',
+    about:'かにつも',
+    video:'動画',
+    sns:'SNS',
+    contact:'お問い合わせ',
+    secret:'シークレット'
+  }[id] || 'ページ';
+
+  showToast(label + 'を開きました！');
+}
+
+links.forEach(link=>{
+  link.addEventListener('click', e=>{
+    const id = link.dataset.page;
+    if(!id) return;
+    e.preventDefault();
+    showPage(id);
+  });
+});
+
+const slideButtons = document.querySelectorAll('.slide-btn');
+slideButtons.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const target = document.getElementById(btn.dataset.slider + '-slider');
+    if(!target) return;
+    const amount = target.clientWidth;
+    target.scrollBy({
+      left: btn.dataset.dir === 'next' ? amount : -amount,
+      behavior: 'smooth'
+    });
+  });
+});
+
+const sliders = document.querySelectorAll('.slider');
+sliders.forEach(slider=>{
+  let isDown=false;
+  let startX;
+  let scrollLeft;
+
+  slider.addEventListener('mousedown',e=>{
+    isDown=true;
+    startX=e.pageX-slider.offsetLeft;
+    scrollLeft=slider.scrollLeft;
+  });
+  slider.addEventListener('mouseleave',()=>isDown=false);
+  slider.addEventListener('mouseup',()=>isDown=false);
+  slider.addEventListener('mousemove',e=>{
+    if(!isDown) return;
+    e.preventDefault();
+    const x=e.pageX-slider.offsetLeft;
+    slider.scrollLeft=scrollLeft-(x-startX)*1.5;
+  });
+});
+
+const reactions = ['うわっ！？','びっくり！','なにこれｗ','やばいって！','草','えぐいｗ'];
+document.addEventListener('click', e=>{
+  if(e.target.closest('iframe')) return;
+  const el = document.createElement('div');
+  el.textContent = reactions[Math.floor(Math.random()*reactions.length)];
+  el.style.position = 'fixed';
+  el.style.left = e.clientX + 'px';
+  el.style.top = e.clientY + 'px';
+  el.style.transform = 'translate(-50%,-50%)';
+  el.style.fontWeight = '900';
+  el.style.color = 'var(--orange)';
+  el.style.pointerEvents = 'none';
+  el.style.zIndex = '9999';
+  el.style.animation = 'popText 0.8s ease forwards';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),800);
+});
+
+function playClickSound(){
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  if(!AudioContext) return;
+  const ctx = new AudioContext();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = 'square';
+  osc.frequency.value = 680;
+  gain.gain.setValueAtTime(0.035, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start();
+  osc.stop(ctx.currentTime + 0.06);
+}
+
+document.addEventListener('click', e=>{
+  if(e.target.closest('.btn') || e.target.closest('a') || e.target.closest('button')){
+    playClickSound();
+  }
+});
+
+const bgm = new Audio('bgm.mp3');
+bgm.loop = true;
+bgm.volume = 0.4;
+let bgmPlaying = false;
+const bgmToggle = document.getElementById('bgmToggle');
+
+function startBgm(){
+  bgm.play().then(()=>{
+    bgmPlaying = true;
+    bgmToggle.textContent = '♪ BGM ON';
+    bgmToggle.classList.add('playing');
+    showToast('BGMスタート！');
+  }).catch(()=>showToast('BGMファイルを確認してね'));
+}
+
+function stopBgm(){
+  bgm.pause();
+  bgm.currentTime = 0;
+  bgmPlaying = false;
+  bgmToggle.textContent = '♪ BGM OFF';
+  bgmToggle.classList.remove('playing');
+  showToast('BGMストップ');
+}
+
+if(bgmToggle){
+  bgmToggle.addEventListener('click',()=>{
+    bgmPlaying ? stopBgm() : startBgm();
+  });
+}
+
+setTimeout(()=>showToast('何かが起きる…'),8000);
+</script>
+
+<style>
+.thumb img,
+.thumb iframe{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border:0;
+  display:block;
+  border-radius:12px;
+}
+
+@keyframes popText{
+  from{opacity:1; transform:translate(-50%,-50%) scale(0.8);} 
+  to{opacity:0; transform:translate(-50%,-90%) scale(1.4);} 
+}
+</style>
+</body>
+</html>
