@@ -83,11 +83,12 @@
       align-items: center;
       justify-content: space-between;
       padding: 0 24px;
-      background: rgba(255,255,255,.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.86);
+      backdrop-filter: blur(18px) saturate(1.2);
+      border-bottom: 1px solid rgba(255,138,0,.18);
       z-index: 100;
       animation: headerDrop .5s ease both;
+      box-shadow: 0 10px 30px rgba(11,18,38,.05);
     }
 
     @keyframes headerDrop {
@@ -106,7 +107,8 @@
       text-align: center;
       position: relative;
       z-index: 1;
-      transition: .22s cubic-bezier(.18,.89,.32,1.28);
+      transition: transform .22s cubic-bezier(.18,.89,.32,1.28), color .22s ease;
+      padding: 4px 2px;
     }
 
     .nav-en { display:block; font-size: 17px; font-weight: 950; letter-spacing: .02em; }
@@ -120,29 +122,79 @@
       width: 48px;
       height: 48px;
       border-radius: 50%;
-      background: var(--yellow);
+      background: linear-gradient(135deg, var(--yellow), #fff3a1);
       transform: translateX(-50%) scale(0) rotate(0deg);
       z-index: -1;
       transition: .25s cubic-bezier(.18,.89,.32,1.28);
+      box-shadow: 0 0 0 0 rgba(255,138,0,.0);
+    }
+
+    .nav a::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -8px;
+      width: 0;
+      height: 4px;
+      background: var(--orange);
+      border-radius: 999px;
+      transform: translateX(-50%);
+      transition: .22s ease;
     }
 
     .nav a:hover::before,
-    .nav a.active::before { transform: translateX(-50%) scale(1) rotate(12deg); }
-    .nav a:hover { transform: translateY(-4px) rotate(-2deg); }
+    .nav a.active::before { transform: translateX(-50%) scale(1) rotate(12deg); box-shadow: 0 8px 18px rgba(255,138,0,.18); }
+    .nav a:hover::after,
+    .nav a.active::after { width: 34px; }
+    .nav a:hover { transform: translateY(-4px) rotate(-2deg); color: var(--orange-dark); }
     .nav a:active { transform: translateY(1px) scale(.96); }
 
     .page {
       display: none;
       padding-top: 100px;
       min-height: 100vh;
-      animation: pagePop .45s ease both;
     }
 
-    .page.active { display: block; }
+    .page.active {
+      display: block;
+      animation: pageEnter .78s cubic-bezier(.16,1,.3,1) both;
+    }
 
-    @keyframes pagePop {
-      from { opacity: 0; transform: translateY(18px) scale(.985); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
+    .page.active .section-wrap,
+    .page.active .hero-content {
+      animation: pageContentIn .9s cubic-bezier(.16,1,.3,1) both;
+    }
+
+    @keyframes pageEnter {
+      0% { opacity: 0; transform: translateY(34px) scale(.97); clip-path: inset(0 0 100% 0 round 28px); }
+      55% { opacity: 1; transform: translateY(-4px) scale(1.01); clip-path: inset(0 0 0 0 round 28px); }
+      100% { opacity: 1; transform: translateY(0) scale(1); clip-path: inset(0 0 0 0 round 0); }
+    }
+
+    @keyframes pageContentIn {
+      from { opacity: 0; transform: translateY(22px); filter: blur(8px); }
+      to { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+
+    #pageTransition{
+      position:fixed;
+      inset:0;
+      z-index:9998;
+      pointer-events:none;
+      background:linear-gradient(135deg,var(--yellow),var(--orange));
+      transform:translateY(100%);
+      border-radius:60% 60% 0 0;
+    }
+
+    #pageTransition.active{
+      animation: pageWipe .62s cubic-bezier(.76,0,.24,1) both;
+    }
+
+    @keyframes pageWipe{
+      0%{transform:translateY(100%);border-radius:60% 60% 0 0;}
+      45%{transform:translateY(0);border-radius:0;}
+      55%{transform:translateY(0);border-radius:0;}
+      100%{transform:translateY(-100%);border-radius:0 0 60% 60%;}
     }
 
     .hero {
@@ -150,9 +202,13 @@
       display: grid;
       place-items: center;
       text-align: center;
-      background: linear-gradient(135deg, #fff, var(--bg-soft));
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.92), rgba(255,247,230,.96)),
+        radial-gradient(circle at 18% 16%, rgba(255,212,0,.36), transparent 24%),
+        radial-gradient(circle at 85% 30%, rgba(255,138,0,.18), transparent 22%);
       position: relative;
       overflow: hidden;
+      border-bottom: 1px solid rgba(255,138,0,.16);
     }
 
     .hero::before,
@@ -446,9 +502,9 @@
       padding: 12px 24px;
       border-radius: 999px;
       border: 3px solid var(--navy);
-      background: var(--yellow);
+      background: linear-gradient(135deg, var(--yellow), #fff1a6);
       font-weight: 950;
-      box-shadow: 0 5px 0 var(--navy);
+      box-shadow: 0 5px 0 var(--navy), 0 12px 24px rgba(255,138,0,.12);
       cursor: pointer;
       transition: .22s cubic-bezier(.18,.89,.32,1.28);
       position: relative;
@@ -483,7 +539,7 @@
     .section-wrap { width: min(1120px, 90%); margin: auto; padding: 58px 0; }
 
     .page-head { text-align:center; margin-bottom: 32px; animation: fadeUp .45s ease both; }
-    .page-head h2 { font-size: clamp(40px, 6vw, 64px); margin: 0; font-weight:950; color:var(--navy); text-shadow: 4px 4px 0 var(--yellow); animation: titleWobble 3.2s ease-in-out infinite; }
+    .page-head h2 { font-size: clamp(42px, 6vw, 72px); margin: 0; font-weight:950; color:var(--navy); text-shadow: 4px 4px 0 var(--yellow); animation: titleWobble 3.2s ease-in-out infinite; letter-spacing: -.035em; }
 
     @keyframes titleWobble {
       0%,100% { transform: rotate(0deg); }
@@ -500,10 +556,32 @@
       margin: 44px 0 18px;
     }
 
-    .section-title-row h2 {
+    .news-pill{display:inline-flex;align-items:flex-end;gap:14px;margin-bottom:10px;}
+.about-pill{display:inline-flex;align-items:flex-end;gap:14px;margin-bottom:10px;}
+.about-pill .main{font-size:44px;font-weight:950;letter-spacing:-0.02em;color:var(--navy);position:relative;padding-bottom:6px;}
+.about-pill .main::after{content:"";position:absolute;left:0;bottom:0;width:100%;height:6px;background:var(--orange);border-radius:4px;}
+.news-pill .main{font-size:44px;font-weight:950;letter-spacing:-0.02em;color:var(--navy);position:relative;padding-bottom:6px;}
+.news-pill .main::after{content:"";position:absolute;left:0;bottom:0;width:100%;height:6px;background:var(--orange);border-radius:4px;}
+.news-pill .sub{font-size:18px;color:var(--navy);font-weight:900;opacity:.8;}
+
+.section-title-row h2 {
       margin: 0;
-      font-size: clamp(28px, 4vw, 44px);
+      font-size: clamp(30px, 4vw, 48px);
       text-shadow: 3px 3px 0 var(--yellow);
+      letter-spacing: -.03em;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title-row h2::after{
+      content:"";
+      position:absolute;
+      left:0;
+      bottom:-8px;
+      width:72px;
+      height:6px;
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--orange),var(--yellow));
     }
 
     .section-title-row p { margin: 0; color: var(--muted); }
@@ -524,12 +602,12 @@
     }
 
     .mini-card {
-      padding: 20px;
+      padding: 22px;
       border: 3px solid var(--navy);
-      border-radius: 22px;
-      background: #fff;
-      box-shadow: 6px 6px 0 var(--orange);
-      transition: .22s cubic-bezier(.18,.89,.32,1.28);
+      border-radius: 24px;
+      background: linear-gradient(180deg, #fff, #fffaf0);
+      box-shadow: 6px 6px 0 var(--orange), 0 14px 28px rgba(11,18,38,.06);
+      transition: transform .22s cubic-bezier(.18,.89,.32,1.28), box-shadow .22s ease;
       animation: softBounce 4s ease-in-out infinite;
     }
 
@@ -594,11 +672,12 @@
 
     .card {
       border: 3px solid var(--navy);
-      padding: 22px;
-      border-radius: 22px;
-      background: #fff;
-      box-shadow: 7px 7px 0 var(--yellow);
-      transition: .24s cubic-bezier(.18,.89,.32,1.28);
+      padding: 24px;
+      border-radius: 26px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.96), rgba(255,255,255,.88));
+      box-shadow: 7px 7px 0 var(--yellow), 0 18px 38px rgba(11,18,38,.07);
+      transition: transform .24s cubic-bezier(.18,.89,.32,1.28), box-shadow .24s ease, background .24s ease;
       position: relative;
       overflow: hidden;
       animation: cardIn .42s ease both;
@@ -626,7 +705,7 @@
     }
 
     .card:hover::before { transform: scale(1.55); background: rgba(255,212,0,.28); }
-    .card:hover { transform: translateY(-8px) rotate(-1deg); box-shadow: 12px 12px 0 var(--orange); }
+    .card:hover { transform: translateY(-8px) rotate(-1deg); box-shadow: 12px 12px 0 var(--orange), 0 22px 46px rgba(255,138,0,.16); background: linear-gradient(180deg, #fff, #fffaf0); }
     .card:active { transform: translateY(-2px) scale(.99); }
 
     @keyframes cardIn {
@@ -986,10 +1065,21 @@
       .home-blocks,.home-fun-grid,.grid-3,.grid-2{grid-template-columns:1fr;}
       .section-title-row { display: block; }
       .timeline-item { grid-template-columns: 1fr; }
+      .news-pill,.about-pill{align-items:flex-start;flex-direction:column;gap:6px;}
+      .news-pill .main,.about-pill .main{font-size:38px;}
+      .news-pill .sub{font-size:16px;}
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *,*::before,*::after{animation:none!important;transition-duration:.01ms!important;}
+      .fade-item{opacity:1!important;transform:none!important;filter:none!important;}
+      #pageTransition,#loading{display:none!important;}
     }
   </style>
 </head>
 <body>
+<div id="loading">CANITUMO</div>
+<div id="pageTransition" aria-hidden="true"></div>
 
 <header class="site-header">
   <a href="#home" data-page="home" class="logo"><img src="logo.png" alt="かにつも"></a>
@@ -998,6 +1088,8 @@
     <a href="#news" data-page="news"><span class="nav-en">NEWS</span><span class="nav-ja">ニュース</span></a>
     <a href="#about" data-page="about"><span class="nav-en">ABOUT</span><span class="nav-ja">かにつも</span></a>
     <a href="#video" data-page="video"><span class="nav-en">VIDEO</span><span class="nav-ja">動画</span></a>
+    <a href="#goods" data-page="goods"><span class="nav-en">GOODS</span><span class="nav-ja">グッズ</span></a>
+    <a href="#special" data-page="special"><span class="nav-en">SPECIAL</span><span class="nav-ja">スペシャル</span></a>
     <a href="#sns" data-page="sns"><span class="nav-en">SNS</span><span class="nav-ja">リンク</span></a>
     <a href="#contact" data-page="contact"><span class="nav-en">CONTACT</span><span class="nav-ja">お問い合わせ</span></a>
   </nav>
@@ -1033,13 +1125,15 @@
   <div class="section-wrap">
     <div class="home-blocks">
       <article class="card prank">
-        <div class="date">NEWS</div>
-        <h2>最新のお知らせ <span class="jp-label">ニュース</span></h2>
+        <div class="news-pill">
+          <span class="main">NEWS</span>
+          <span class="sub">最新情報</span>
+        </div>
         <p>新作動画・配信予定・企画のお知らせをここに表示します。更新があるたびに、ここからすぐ確認できます。</p>
         <a href="#news" data-page="news" class="btn">ニュースを見る</a>
       </article>
       <article class="card orange-shadow">
-        <div class="date">ABOUT</div>
+        <div class="about-pill"><span class="main">ABOUT</span></div>
         <h2>かにつもとは？</h2>
         <div class="intro-box">
           <p class="intro-main">どうも！<br>かにつもです！</p>
@@ -1235,6 +1329,49 @@
   </div>
 </section>
 
+<section id="goods" class="page">
+  <div class="section-wrap">
+    <div class="page-head"><h2>GOODS</h2><p>グッズ</p></div>
+    <div class="grid-3">
+      <div class="card prank">
+        <div class="date">COMING SOON</div>
+        <h3>グッズ準備中！</h3>
+        <p>かにつも公式グッズは今後追加予定です。ステッカー、アクリル系、配信用素材などを考え中！</p>
+      </div>
+      <div class="card orange-shadow">
+        <div class="date">IDEA</div>
+        <h3>ほしいグッズ募集中</h3>
+        <p>「こんなの欲しい！」というアイデアがあれば、SNSやコメントで教えてください。</p>
+      </div>
+      <div class="card prank">
+        <div class="date">NEXT</div>
+        <h3>今後のお楽しみ</h3>
+        <p>イラストやロゴが完成したら、ここにグッズ風の見せ方を追加予定です。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="special" class="page">
+  <div class="section-wrap">
+    <div class="page-head"><h2>SPECIAL</h2><p>スペシャル</p></div>
+    <div class="grid-2">
+      <div class="card orange-shadow">
+        <div class="date">SPECIAL</div>
+        <h3>特別コンテンツ</h3>
+        <p>ここでは限定企画、隠し要素、サイトだけの遊び要素などを追加予定です。</p>
+        <p>まずは「また来たくなる場所」を目指して、少しずつアップデートしていきます。</p>
+      </div>
+      <div class="card prank">
+        <div class="date">SECRET</div>
+        <h3>何かが起きるかも？</h3>
+        <p>今後、特定の操作で開く隠しページや、動画と連動した仕掛けを追加予定！</p>
+        <a href="#secret" data-page="secret" class="btn orange">秘密をのぞく</a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="sns" class="page">
   <div class="section-wrap">
     <div class="page-head"><h2>SNS</h2><p>リンク</p></div>
@@ -1289,26 +1426,37 @@ function showPage(id){
   const targetPage = document.getElementById(id);
   if(!targetPage) return;
 
-  pages.forEach(page=>page.classList.remove('active'));
-  targetPage.classList.add('active');
+  const transition = document.getElementById('pageTransition');
+  if(transition){
+    transition.classList.remove('active');
+    void transition.offsetWidth;
+    transition.classList.add('active');
+  }
 
-  navLinks.forEach(link=>{
-    link.classList.toggle('active', link.dataset.page === id);
-  });
+  setTimeout(()=>{
+    pages.forEach(page=>page.classList.remove('active'));
+    targetPage.classList.add('active');
 
-  window.scrollTo(0,0);
+    navLinks.forEach(link=>{
+      link.classList.toggle('active', link.dataset.page === id);
+    });
 
-  const label = {
-    home:'トップ',
-    news:'ニュース',
-    about:'かにつも',
-    video:'動画',
-    sns:'SNS',
-    contact:'お問い合わせ',
-    secret:'シークレット'
-  }[id] || 'ページ';
+    window.scrollTo(0,0);
 
-  showToast(label + 'を開きました！');
+    const label = {
+      home:'トップ',
+      news:'ニュース',
+      about:'かにつも',
+      video:'動画',
+      goods:'グッズ',
+      special:'スペシャル',
+      sns:'SNS',
+      contact:'お問い合わせ',
+      secret:'シークレット'
+    }[id] || 'ページ';
+
+    showToast(label + 'を開きました！');
+  },220);
 }
 
 links.forEach(link=>{
@@ -1354,23 +1502,7 @@ sliders.forEach(slider=>{
   });
 });
 
-const reactions = ['うわっ！？','びっくり！','なにこれｗ','やばいって！','草','えぐいｗ'];
-document.addEventListener('click', e=>{
-  if(e.target.closest('iframe')) return;
-  const el = document.createElement('div');
-  el.textContent = reactions[Math.floor(Math.random()*reactions.length)];
-  el.style.position = 'fixed';
-  el.style.left = e.clientX + 'px';
-  el.style.top = e.clientY + 'px';
-  el.style.transform = 'translate(-50%,-50%)';
-  el.style.fontWeight = '900';
-  el.style.color = 'var(--orange)';
-  el.style.pointerEvents = 'none';
-  el.style.zIndex = '9999';
-  el.style.animation = 'popText 0.8s ease forwards';
-  document.body.appendChild(el);
-  setTimeout(()=>el.remove(),800);
-});
+
 
 function playClickSound(){
   const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -1424,7 +1556,22 @@ if(bgmToggle){
   });
 }
 
-setTimeout(()=>showToast('何かが起きる…'),8000);
+setTimeout(()=>showToast('サイトへようこそ！'),2000);
+
+// スクロール表示アニメーション
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add('show');
+    }
+  });
+},{threshold:0.2});
+
+document.querySelectorAll('.card, .mini-card, .section-title-row, .timeline-item, .profile-image').forEach((el,index)=>{
+  el.classList.add('fade-item');
+  el.style.setProperty('--reveal-delay', `${(index % 6) * 0.08}s`);
+  observer.observe(el);
+});
 </script>
 
 <style>
@@ -1442,6 +1589,14 @@ setTimeout(()=>showToast('何かが起きる…'),8000);
   from{opacity:1; transform:translate(-50%,-50%) scale(0.8);} 
   to{opacity:0; transform:translate(-50%,-90%) scale(1.4);} 
 }
+#loading{position:fixed;inset:0;background:#fff;display:flex;align-items:center;justify-content:center;z-index:9999;font-size:28px;font-weight:900;animation:fadeOut 1s ease forwards;animation-delay:1s;}
+@keyframes fadeOut{to{opacity:0;visibility:hidden;}}
+.fade-item{opacity:0;transform:translateY(64px) scale(.94) rotate(-1.5deg);filter:blur(10px);transition:opacity .86s cubic-bezier(.16,1,.3,1), transform .86s cubic-bezier(.16,1,.3,1), filter .86s cubic-bezier(.16,1,.3,1);transition-delay:var(--reveal-delay,0s);}
+.fade-item.show{opacity:1;transform:translateY(0) scale(1) rotate(0deg);filter:blur(0);}
+.card.fade-item.show:nth-child(2n),.mini-card.fade-item.show:nth-child(2n){animation: revealSettleA .7s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--reveal-delay,0s);}
+.card.fade-item.show:nth-child(3n),.mini-card.fade-item.show:nth-child(3n){animation: revealSettleB .7s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--reveal-delay,0s);}
+@keyframes revealSettleA{0%{opacity:0;transform:translateX(-28px) translateY(38px) scale(.96) rotate(-2deg);filter:blur(8px);}70%{opacity:1;transform:translateX(3px) translateY(-3px) scale(1.01) rotate(.6deg);filter:blur(0);}100%{opacity:1;transform:translateX(0) translateY(0) scale(1) rotate(0);filter:blur(0);}}
+@keyframes revealSettleB{0%{opacity:0;transform:translateX(28px) translateY(38px) scale(.96) rotate(2deg);filter:blur(8px);}70%{opacity:1;transform:translateX(-3px) translateY(-3px) scale(1.01) rotate(-.6deg);filter:blur(0);}100%{opacity:1;transform:translateX(0) translateY(0) scale(1) rotate(0);filter:blur(0);}}
 </style>
 </body>
 </html>
